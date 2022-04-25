@@ -1,7 +1,7 @@
-name: "matrix_factorize_words"
+name: matrix_factorize_words
 output_dir: ../docs
 navbar:
-  title: "matrix_factorize_words"
+  title: matrix_factorize_words
   left:
   - text: Home
     href: index.html
@@ -9,6 +9,10 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right:
+  - icon: fab fa-github
+    text: Source code
+    href: https://github.com/suzannastep/matrix_factorize_words
 output:
   workflowr::wflow_html:
     toc: yes
