@@ -7,4 +7,4 @@ editor_options:
   chunk_output_type: console
 ---
 
-Describe your project.
+Attempting to use interpretable matrix factorizations to find patterns in word data, including pre-trained GLOVE and word2vec word representations, using flash matrix factorizations.
