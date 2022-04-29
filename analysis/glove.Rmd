@@ -1,0 +1,96 @@
+---
+title: "glove"
+author: "Sue Parkinson"
+date: "2022-04-25"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+Load in Data. Data is 50-dimensional GLOVE vectors representing a 400k size vocabulary.
+
+```{r}
+dim=50
+path = paste("./data/glove.nosync/glove.6B.",dim,"d.txt",sep="")
+words = read.table(path,row.names=1,quote="",comment.char = "",col.names=c("word",1:dim),header=FALSE)
+```
+
+Truncate to a subset of the words.
+
+```{r}
+truncatenum = 40000
+words = words[1:truncatenum,]
+```
+
+Explore these words
+
+```{r}
+head(words)
+```
+
+```{r}
+tail(words)
+```
+
+## Explore Some Analogies
+
+```{r}
+normalize_words = function(words){
+    norms = sqrt(rowSums(words^2))
+    words = t(scale(t(words),center=FALSE,scale=norms))
+    return(words)
+}
+normalized_words = normalize_words(words)
+```
+
+
+```{r}
+get_cosine = function(word1,word2=NULL){
+    word1 = as.matrix(word1,byrow=FALSE)
+    word1 = word1 / sqrt(sum(word1^2))
+    if (is.null(word2)){
+        return(normalized_words %*% t(word1))
+    }
+    else{
+        word2 = as.matrix(word2,byrow=FALSE)
+        word2 = word2 / sqrt(sum(word2^2))
+        return(word2 %*% t(word1))
+    }
+}
+library(ramify) #argmax function
+get_nearest = function(myvec,w=words,n=1){
+    cosines = get_cosine(myvec)
+    best = order(cosines,decreasing=TRUE)[1:n]
+    return(row.names(w)[best])
+}
+analogy = function(a,b,c,n=1){
+    return(get_nearest(words[b,]-words[a,]+words[c,],n=n))
+}
+#does okay at analogies
+analogy("man","father","woman",n=5)
+analogy("come","comes","go",n=5)
+analogy("drink","thirsty","food",n=5)
+analogy("type","typing","dance",n=5)
+```
+
+
+## Use Flashier
+
+```{r}
+library(flashier)
+```
+
+```{r}
+W = as.matrix(words)
+fl = flash(W,greedy.Kmax = 10,backfit=FALSE)
+```
+
+```{r}
+L = ldf(fl)$L
+library(MASS)
+write.matrix(L,file=paste("./output/L",truncatenum,"by",dim,".csv",sep=""))
+write.matrix(row.names(words),file=paste("./output/words",truncatenum,"by",dim,".csv",sep=""))
+```
+
