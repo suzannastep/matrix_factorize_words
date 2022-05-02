@@ -28,7 +28,7 @@ for (priornum in seq_along(prior)){
     fl = flash(W,greedy.Kmax=kMAX,ebnm.fn=prior[[priornum]],backfit=backfitting)
     L = ldf(fl)$L
     #save output
-    filename = paste(truncatenum,"by",dim,prior_name[priornum],"backfit_55factors",backfitting,sep="_")
+    filename = paste(truncatenum,"by",dim,prior_name[priornum],"backfit",backfitting,sep="_")
     write.matrix(L,file=paste("./output/",filename,"_L.csv",sep=""))
     save(fl,file=paste("./output/",filename,"_data.RData",sep=""))
 }
