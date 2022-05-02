@@ -9,3 +9,6 @@ editor_options:
 ---
 
 Welcome to my research website.
+
+1. [glove](glove.html)
+1. [glove results](glove jupyter.html)
